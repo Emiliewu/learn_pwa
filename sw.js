@@ -1,4 +1,4 @@
-const CACHE_NAME = 'chache-v2';
+const CACHE_NAME = 'chache-v1';
 self.addEventListener('install', event => {
     console.log('install', event);
     event.waitUntil(caches.open(CACHE_NAME)
@@ -13,9 +13,9 @@ self.addEventListener('activate', event => {
     console.log('activate', event);
     event.waitUntil(caches.keys()
         .then( cacheNames => {
-            return Promise.all(cacheNames.map( cacheNames => {
-                if(cacheNames !== CACHE_NAME) {
-                    return caches.delete(cacheNames);
+            return Promise.all(cacheNames.map( cacheName => {
+                if(cacheName !== CACHE_NAME) {
+                    return caches.delete(cacheName);
                 }
             }));
         }));
@@ -23,7 +23,7 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
     console.log('fetch', event);
-    event.responseWith(caches.open(CACHE_NAME)
+    event.respondWith(caches.open(CACHE_NAME)
         .then(cache => {
             return cache.match(event.request)
                 .then(response => {
